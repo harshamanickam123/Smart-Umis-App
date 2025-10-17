@@ -1,0 +1,41 @@
+name: flutter_application_1
+description: Smart UMIS Data Entry System - A Flutter application for managing student and staff records with authentication and data entry capabilities.
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # HTTP requests for API communication
+  http: ^1.1.0
+  
+  # Cupertino icons for iOS-style icons
+  cupertino_icons: ^1.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+  # Linting rules for code quality
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Uncomment and add assets if you have any images, fonts, etc.
+  # assets:
+  #   - images/
+  #   - assets/
+  
+  # fonts:
+  #   - family: CustomFont
+  #     fonts:
+  #       - asset: fonts/CustomFont-Regular.ttf
+  #       - asset: fonts/CustomFont-Bold.ttf
+  #         weight: 700
