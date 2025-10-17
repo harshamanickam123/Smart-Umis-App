@@ -1,6 +1,6 @@
 # Smart UMIS - University Management Information System
 
-A complete full-stack application with Flutter frontend and Node.js backend using MongoDB for authentication and data management.
+A complete full-stack application with Flutter frontend and Node.js backend using SQLite for authentication and data management.
 
 ## 🏗️ Project Structure
 
@@ -9,6 +9,7 @@ smart-umis/
 ├── backend/                 # Node.js Backend
 │   ├── server.js           # Main server file
 │   ├── package.json        # Node dependencies
+│   ├── smart_umis.db       # SQLite database file
 │   └── .env               # Environment variables
 │
 └── frontend/               # Flutter Frontend
@@ -28,13 +29,14 @@ smart-umis/
 - ✅ Password change functionality
 - ✅ Role-based access control
 - ✅ Responsive Flutter UI
+- ✅ Lightweight SQLite database
 
 ## 📋 Prerequisites
 
 ### Backend Requirements
 - **Node.js** (v14 or higher)
-- **MongoDB** (Local or MongoDB Atlas)
 - **npm** or **yarn**
+- SQLite (automatically included with node)
 
 ### Frontend Requirements
 - **Flutter SDK** (v3.0 or higher)
@@ -43,31 +45,25 @@ smart-umis/
 
 ## 🔧 Backend Setup
 
-### 1. Install MongoDB
+### 1. SQLite Database
 
-**Option A: Local MongoDB**
-- Download from [MongoDB Official Site](https://www.mongodb.com/try/download/community)
-- Install and start MongoDB service
+**No installation required!** SQLite is file-based and will be automatically created when you first run the backend.
 
-**Option B: MongoDB Atlas (Cloud)**
-- Create free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-- Create a cluster and get connection string
+The database file `smart_umis.db` will be created in the backend folder on first run.
 
 ### 2. Setup Backend
 
 ```bash
 # Navigate to backend directory
-cd backend
+cd smart_umis_backend
 
 # Install dependencies
 npm install
 
-# Create .env file
-cp .env.example .env
-
-# Edit .env file with your configurations
-# Update MONGODB_URI with your connection string
-# Update JWT_SECRET with a random secure string
+# Create .env file (if not exists)
+# Add the following content:
+# PORT=3000
+# JWT_SECRET=your_secret_key_here_min_32_characters
 
 # Start the server
 npm start
@@ -77,6 +73,8 @@ npm run dev
 ```
 
 The backend will run on `http://localhost:3000`
+
+The SQLite database file `smart_umis.db` will be automatically created on first run.
 
 ### 3. Test Backend API
 
@@ -119,7 +117,7 @@ flutter doctor
 
 ```bash
 # Navigate to frontend directory
-cd frontend
+cd smart_umis_frontend
 
 # Get dependencies
 flutter pub get
@@ -137,7 +135,7 @@ flutter run -d <device-id>
 
 ### 3. Configure API URL
 
-In `lib/main.dart`, update the API URL:
+In `lib/main.dart`, update the API URL based on your setup:
 
 ```dart
 // For Android Emulator
@@ -151,6 +149,15 @@ final String apiUrl = 'http://192.168.x.x:3000/api';
 
 // For Production
 final String apiUrl = 'https://your-api-domain.com/api';
+```
+
+**To find your IP address:**
+```bash
+# Windows
+ipconfig
+
+# Mac/Linux
+ifconfig
 ```
 
 ## 🔐 API Endpoints
@@ -175,18 +182,18 @@ final String apiUrl = 'https://your-api-domain.com/api';
 
 ## 📊 Database Schema
 
-### User Collection
+### Users Table (SQLite)
 
-```javascript
-{
-  _id: ObjectId,
-  fullName: String (required),
-  username: String (required, unique),
-  email: String (required, unique),
-  password: String (hashed, required),
-  role: String (enum: ['Student', 'Staff']),
-  createdAt: Date
-}
+```sql
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  fullName TEXT NOT NULL,
+  username TEXT UNIQUE NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
+  role TEXT CHECK(role IN ('Student', 'Staff')) NOT NULL,
+  createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 ```
 
 ## 🔒 Security Features
@@ -197,6 +204,7 @@ final String apiUrl = 'https://your-api-domain.com/api';
 - **Role-Based Access**: Staff vs Student permissions
 - **Secure Headers**: CORS enabled
 - **Environment Variables**: Sensitive data protected
+- **SQLite**: Lightweight, serverless database
 
 ## 🎨 UI Screens
 
@@ -227,7 +235,7 @@ After registration, you can create test accounts:
 
 ### Backend Dependencies
 - `express`: Web framework
-- `mongoose`: MongoDB ODM
+- `sqlite3`: SQLite database driver
 - `bcryptjs`: Password hashing
 - `jsonwebtoken`: JWT authentication
 - `cors`: Cross-origin resource sharing
@@ -241,16 +249,10 @@ After registration, you can create test accounts:
 
 ### Backend Issues
 
-**MongoDB Connection Error:**
+**Database File Not Created:**
 ```bash
-# Check if MongoDB is running
-mongosh
-
-# For Windows
-net start MongoDB
-
-# For Mac/Linux
-sudo systemctl start mongod
+# Ensure you have write permissions in backend folder
+# The smart_umis.db file will be created automatically on first run
 ```
 
 **Port Already in Use:**
@@ -259,17 +261,72 @@ sudo systemctl start mongod
 PORT=3001
 ```
 
+**SQLite Database Locked:**
+```bash
+# Stop the server and restart
+# Make sure only one instance is running
+```
+
 ### Frontend Issues
 
 **Connection Refused:**
-- Ensure backend is running
+- Ensure backend is running on `http://localhost:3000`
 - Check API URL configuration
 - For Android emulator, use `10.0.2.2` instead of `localhost`
+- For physical device, use your computer's IP address
 
 **Flutter Dependencies Error:**
 ```bash
 flutter clean
 flutter pub get
+```
+
+## 📁 Database Management
+
+### View SQLite Database
+
+**Using DB Browser for SQLite (Recommended):**
+1. Download from [DB Browser for SQLite](https://sqlitebrowser.org/)
+2. Open `smart_umis.db` file from backend folder
+3. Browse tables, run queries, view data
+
+**Using Command Line:**
+```bash
+# Navigate to backend folder
+cd smart_umis_backend
+
+# Open SQLite CLI
+sqlite3 smart_umis.db
+
+# View all tables
+.tables
+
+# Query users
+SELECT * FROM users;
+
+# Exit
+.quit
+```
+
+### Backup Database
+
+```bash
+# Create backup
+cp smart_umis.db smart_umis_backup.db
+
+# Or use SQLite backup command
+sqlite3 smart_umis.db ".backup 'backup.db'"
+```
+
+### Reset Database
+
+```bash
+# Stop the backend server first
+# Delete the database file
+rm smart_umis.db  # Mac/Linux
+del smart_umis.db  # Windows
+
+# Restart server - a new database will be created
 ```
 
 ## 🚀 Deployment
@@ -282,11 +339,14 @@ heroku login
 heroku create smart-umis-api
 
 # Set environment variables
-heroku config:set MONGODB_URI="your_mongodb_atlas_uri"
-heroku config:set JWT_SECRET="your_secret_key"
+heroku config:set JWT_SECRET="your_secret_key_here"
+heroku config:set PORT=3000
 
 # Deploy
 git push heroku main
+
+# Note: SQLite database will be created on the server
+# For production, consider using PostgreSQL or MySQL
 ```
 
 ### Frontend Deployment
@@ -300,7 +360,7 @@ flutter build web
 **Android:**
 ```bash
 flutter build apk --release
-# Or
+# Or for Play Store
 flutter build appbundle --release
 ```
 
@@ -309,13 +369,40 @@ flutter build appbundle --release
 flutter build ios --release
 ```
 
+## ⚠️ Important Notes
+
+- **SQLite is file-based**: The database file `smart_umis.db` will be in your backend folder
+- **Backup regularly**: Copy the `.db` file to backup your data
+- **Not in .gitignore**: If you want to share an empty database structure, keep the file. If you want team members to start fresh, add `*.db` to `.gitignore`
+- **Production**: For production deployment with multiple servers, consider migrating to PostgreSQL or MySQL
+
+## 📝 Environment Variables
+
+Create a `.env` file in the backend folder:
+
+```env
+PORT=5000
+JWT_SECRET=your_super_secret_key_at_least_32_characters_long
+```
+
+## 👥 Contributors
+
+- HARHSA VARDHINI N
+- DHAARANI S
+- AVINASH RK
+- KARTHIK PRAKASH M
+
 ## 📝 License
 
 MIT License
 
-## 👥 Contributors
+---
 
-HARHSA VARDHINI N
-DHAARANI S
-AVINASH RK
-KARTHIK PRAKASH M
+## 🆘 Need Help?
+
+If you encounter any issues:
+1. Check the Troubleshooting section above
+2. Ensure all dependencies are installed
+3. Verify backend is running before starting frontend
+4. Check console logs for error messages
+5. Make sure SQLite database file has proper permissions
