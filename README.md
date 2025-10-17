@@ -62,7 +62,7 @@ npm install
 
 # Create .env file (if not exists)
 # Add the following content:
-# PORT=3000
+# PORT=5000
 # JWT_SECRET=your_secret_key_here_min_32_characters
 
 # Start the server
@@ -72,7 +72,7 @@ npm start
 npm run dev
 ```
 
-The backend will run on `http://localhost:3000`
+The backend will run on `http://localhost:5000`
 
 The SQLite database file `smart_umis.db` will be automatically created on first run.
 
@@ -80,10 +80,10 @@ The SQLite database file `smart_umis.db` will be automatically created on first 
 
 ```bash
 # Health check
-curl http://localhost:3000/api/health
+curl http://localhost:5000/api/health
 
 # Register a new user
-curl -X POST http://localhost:3000/api/auth/register \
+curl -X POST http://localhost:5000/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "fullName": "John Doe",
@@ -94,7 +94,7 @@ curl -X POST http://localhost:3000/api/auth/register \
   }'
 
 # Login
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "username": "johndoe",
@@ -139,13 +139,13 @@ In `lib/main.dart`, update the API URL based on your setup:
 
 ```dart
 // For Android Emulator
-final String apiUrl = 'http://10.0.2.2:3000/api';
+final String apiUrl = 'http://10.0.2.2:5000/api';
 
 // For iOS Simulator
-final String apiUrl = 'http://localhost:3000/api';
+final String apiUrl = 'http://localhost:5000/api';
 
 // For Physical Device (use your computer's IP)
-final String apiUrl = 'http://192.168.x.x:3000/api';
+final String apiUrl = 'http://192.168.x.x:5000/api';
 
 // For Production
 final String apiUrl = 'https://your-api-domain.com/api';
