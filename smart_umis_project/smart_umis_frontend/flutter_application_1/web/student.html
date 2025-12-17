@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Info</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+  .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 400px; margin: auto; }
+  .row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+  .label { font-weight: bold; }
+  h2 { text-align: center; margin-bottom: 20px; }
+  .error { text-align: center; color: red; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="card" id="studentCard" style="display: none;">
+  <h2>Student Details</h2>
+  <div class="row"><span class="label">ID:</span> <span id="id"></span></div>
+  <div class="row"><span class="label">Full Name:</span> <span id="fullName"></span></div>
+  <div class="row"><span class="label">Department:</span> <span id="department"></span></div>
+  <div class="row"><span class="label">Timestamp:</span> <span id="ts"></span></div>
+</div>
+
+<div class="error" id="errorMsg" style="display: none;"></div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const token = params.get('token'); // Get student ID from URL
+
+const studentCard = document.getElementById('studentCard');
+const errorMsg = document.getElementById('errorMsg');
+
+if (token) {
+  fetch(`http://127.0.0.1:5000/student/${token}`)
+    .then(res => {
+      if (!res.ok) throw new Error('Student not found');
+      return res.json();
+    })
+    .then(data => {
+      document.getElementById('id').innerText = data.id || '';
+      document.getElementById('fullName').innerText = data.name || '';
+      document.getElementById('department').innerText = data.branch || '';
+      document.getElementById('ts').innerText = new Date().toLocaleString();
+      studentCard.style.display = 'block';
+    })
+    .catch(err => {
+      errorMsg.innerText = err.message;
+      errorMsg.style.display = 'block';
+    });
+} else {
+  errorMsg.innerText = "No student token provided in URL";
+  errorMsg.style.display = 'block';
+}
+</script>
+
+</body>
+</html>

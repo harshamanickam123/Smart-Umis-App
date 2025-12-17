@@ -1,0 +1,52 @@
+# =========================
+# Flutter
+# =========================
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+
+# =========================
+# Android / Gradle
+# =========================
+.gradle/
+android/.gradle/
+android/local.properties
+local.properties
+.cxx/
+captures/
+gradlew
+gradlew.bat
+gradle-wrapper.jar
+
+# =========================
+# Node.js (Backend)
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# =========================
+# IDE / OS
+
+# =========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# =========================
+# Security
+# =========================
+key.properties
+**/*.keystore
+**/*.jks
+.env
+
+# Kotlin / Android temp files
+android/.kotlin/
+**/*.log
+
