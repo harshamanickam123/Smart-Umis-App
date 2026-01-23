@@ -101,6 +101,10 @@ curl -X POST http://localhost:5000/api/auth/login \
     "password": "password123"
   }'
 ```
+## Dashboard page
+![WhatsApp Image 2025-11-23 at 20 28 40_873f26b4](https://github.com/user-attachments/assets/72a2da16-1b81-43c4-a16b-dfe078b90ba7)
+
+
 
 ## 📱 Frontend Setup
 
